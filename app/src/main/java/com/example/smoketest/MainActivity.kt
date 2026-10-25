@@ -14,6 +14,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         val input = findViewById<EditText>(R.id.input)
         val button = findViewById<Button>(R.id.btn_go)
+        val btnCloud = findViewById<Button>(R.id.btn_cloud)
         output = findViewById<TextView>(R.id.output)
 
         ContextCompat.registerReceiver(
@@ -62,6 +66,28 @@ class MainActivity : AppCompatActivity() {
                 text.startsWith("http://") || text.startsWith("https://") -> startDownload(text)
                 else -> output.text = "你输入了：$text"
             }
+        }
+
+        btnCloud.setOnClickListener { wakeCloudAssistant() }
+    }
+
+    /** 向云端助手发送唤醒 GET 请求：只发送，不处理返回内容 */
+    private fun wakeCloudAssistant() {
+        output.text = "正在唤醒云端助手…"
+        thread(name = "cloud-wake") {
+            var result: String
+            try {
+                val conn = URL(CLOUD_API_URL).openConnection() as HttpURLConnection
+                conn.requestMethod = "GET"
+                conn.connectTimeout = 10_000
+                conn.readTimeout = 10_000
+                val code = conn.responseCode
+                result = "请求已发送，响应码: $code"
+                conn.disconnect()
+            } catch (e: Exception) {
+                result = "请求失败: ${e.message}"
+            }
+            runOnUiThread { output.text = result }
         }
     }
 
@@ -86,5 +112,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "SmokeTest"
+
+        /** 云端助手地址：把「你的云IP」替换成真实服务器 IP */
+        private const val CLOUD_API_URL = "http://你的云IP:8080/api/start"
     }
 }
