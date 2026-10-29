@@ -190,6 +190,11 @@ object InitPlan {
         "mfgloader", "wlandutservice", "bt_dut_cmd", "bootanim", "samsungani", "playsound", "sdcard", "fuse_sdcard0",
         "healthd", "logd", "lmkd", "watchdogd", "ril-daemon1", "ril-daemon2", "fota", "gpsd", "sensors", "akmd",
         "rmt_storage", "qmuxd", "netmgrd", "thermald", "mpdecision", "thermal-engine", "time_daemon", "diag",
+        // Oppo/ColorOS: OPPO watchdog + telemetry daemons that hang and drag system_server down in the emulator.
+        // nwatchcall is OPPO's watchdogd (kills zygote/system_server on an artificial hang), the rest are the
+        // IAtlas/AtlasService telemetry chain and OplusPerfCount — none of them have real hardware to talk to.
+        "nwatchcall", "atlas", "AtlasService", "atlasservice", "iatlas", "OplusPerfCount", "oplusperfcount", "oplus_perf",
+        "oplus.gesture", "oplus_gesture", "m.oplus.gesture", "oplus.vibrator", "oplus.rtc", "oplus.haptics",
     )
     private val SKIP_BIN = setOf(
         "logwrapper", "sh", "rild", "vold", "wpa_supplicant", "dhcpcd", "bluetoothd", "hciattach", "btld", "adbd",
@@ -199,6 +204,9 @@ object InitPlan {
         // Qualcomm: камера, TrustZone, модем — лезут в /dev своего железа и сыплют ошибками
         "mm-qcamera", "qcamerasvr", "qseecomd", "bridgemgrd", "irsc_util", "mm-pp-daemon", "ks", "qcks", "efsks",
         "sensors.qcom", "location-mq", "xtwifi", "quipc", "usf_", "adsprpcd", "subsystem_ramdump",
+        // Oppo/ColorOS vendor binaries: the OPPO watchdog and its hardware/telemetry daemons.
+        // The oplus_ / oplus. prefixes catch the rest of the ColorOS vendor daemons (system_monitor, perf, gestures...).
+        "nwatchcall", "atlas", "atlasservice", "oplusperfcount", "oplus_", "oplus.",
     )
 
     private fun toService(s: RcService, r: Rule): GuestService {
