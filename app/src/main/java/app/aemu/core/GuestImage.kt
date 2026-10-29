@@ -5,9 +5,9 @@ import org.json.JSONObject
 
 /** Настройки конкретного образа, которые пользователь может менять. */
 data class VmSettings(
-    val width: Int = 540,
-    val height: Int = 960,
-    val density: Int = 240,
+    val width: Int = 720,
+    val height: Int = 1280,
+    val density: Int = 280,
     /** аппаратная отрисовка через GPU телефона (иначе программный растеризатор прошивки) */
     val gpu: Boolean = true,
     /** hwui в гостевых приложениях (4.x) */
@@ -19,7 +19,7 @@ data class VmSettings(
     /** частота развёртки гостя, Гц */
     val fbHz: Int = 60,
     /** касаний в секунду, которые шлём гостю */
-    val touchHz: Int = 60,
+    val touchHz: Int = 90,
     /** HTTP/HTTPS-прокси с современным TLS для старых браузеров */
     val netProxy: Boolean = true,
     val lowRam: Boolean = false,
