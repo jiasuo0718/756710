@@ -213,7 +213,7 @@ class GuestRunner(
         /** RAM the guest is told it has: the user's choice, or what phones of that Android version shipped with. */
         fun guestRamMb(api: Int, chosen: Int): Int {
             if (chosen > 0) return chosen
-            val typical = when { api <= 10 -> 512; api <= 15 -> 1024; api <= 19 -> 2048; api <= 23 -> 3072; else -> 6144 }
+            val typical = when { api <= 10 -> 512; api <= 15 -> 1024; api <= 19 -> 2048; api <= 23 -> 3072; else -> 4096 }
             val hostMb = runCatching {
                 java.io.File("/proc/meminfo").useLines { l -> l.first { it.startsWith("MemTotal:") } }.split(Regex("\\s+"))[1].toLong() / 1024
             }.getOrDefault(8192L)
